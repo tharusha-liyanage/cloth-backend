@@ -56,5 +56,11 @@ public class CarouselSlideController {
     ) throws IOException {
         return service.updateSlide(id, title, subtitle, image);
     }
+
+    @GetMapping("/{id}")
+    public HomeCarouselSlide getSlide(@PathVariable Long id) {
+        return service.getById(id);
+    }
+
 }
 

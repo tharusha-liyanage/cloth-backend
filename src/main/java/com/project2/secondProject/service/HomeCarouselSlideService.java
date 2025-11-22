@@ -66,4 +66,9 @@ public class HomeCarouselSlideService {
 
         return repo.save(slide);
     }
+
+    public HomeCarouselSlide getById(Long id) {
+        return repo.findById(id).orElse(null);
+    }
+
 }
