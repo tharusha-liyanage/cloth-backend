@@ -1,5 +1,6 @@
 package com.project2.secondProject.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,6 +18,7 @@ public class CartItem {
     // One item belongs to one cart
     @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonIgnore // <--- ADD THIS!
     private Cart cart;
 
     // Which product

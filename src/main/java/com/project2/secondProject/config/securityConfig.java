@@ -45,7 +45,7 @@ public class securityConfig {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         http.authorizeHttpRequests(request -> request
-                .requestMatchers("/register", "/login", "/api/vi/employee/**","/getUser", "/logout","/getAllUser","/deleteUser/**","/updateUserRole/**","/api/clothes/**","/api/homecarousel/**","/api/offers/**","/api/cart/**").permitAll() // ✅ matches your controller
+                .requestMatchers("/register", "/login", "/api/vi/employee/**","/getUser", "/logout","/getAllUser","/deleteUser/**","/updateUserRole/**","/api/clothes/**","/api/homecarousel/**","/api/offers/**","/api/cart/**","api/v1/payment/**").permitAll() // ✅ matches your controller
                 .anyRequest().authenticated()
         );
 
