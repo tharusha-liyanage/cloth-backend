@@ -33,9 +33,8 @@ public class OrderController {
     @PostMapping("/create")
     public ResponseEntity<?> createOrder(@RequestHeader("Authorization") String authHeader) {
 
-        // 1️⃣ extract username from token
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.badRequest().body("Missing or invalid token");
+            return ResponseEntity.status(401).body("Unauthorized");
         }
 
         String token = authHeader.substring(7);
@@ -43,17 +42,16 @@ public class OrderController {
 
         User user = userRepo.findByUsername(username);
         if (user == null) {
-            return ResponseEntity.badRequest().body("User not found");
+            return ResponseEntity.status(404).body("User not found");
         }
 
         try {
             Order order = orderService.createOrderFromCart(user);
-            return ResponseEntity.ok("Order created successfully with ID: " + order.getId());
-        } catch (RuntimeException ex) {
-            return ResponseEntity.badRequest().body(ex.getMessage());
+            return ResponseEntity.ok(order);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
     /** ─────────────────────────────────────────────────────────────
      *  ✔ GET LOGGED-IN USER'S ORDERS
      *  ───────────────────────────────────────────────────────────── */
