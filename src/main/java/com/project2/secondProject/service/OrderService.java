@@ -27,6 +27,15 @@ public class OrderService {
     @Autowired
     private UserRepo userRepo;
 
+    @Transactional
+    public boolean deleteOrder(Long orderId) {
+        if (orderRepository.existsById(orderId)) {
+            orderRepository.deleteById(orderId);
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Create order from user's cart.
      */

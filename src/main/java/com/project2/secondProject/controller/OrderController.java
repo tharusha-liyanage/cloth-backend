@@ -94,4 +94,14 @@ public class OrderController {
         }
         return ResponseEntity.ok(dto);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteOrder(@PathVariable Long id) {
+        boolean deleted = orderService.deleteOrder(id);
+        if (deleted) {
+            return ResponseEntity.ok("Order deleted successfully");
+        } else {
+            return ResponseEntity.status(404).body("Order not found");
+        }
+    }
 }
