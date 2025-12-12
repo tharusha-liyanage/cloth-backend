@@ -31,20 +31,20 @@ public class ClothService {
             throw new IllegalArgumentException("Image file is required");
         }
 
-        // ✅ Upload image to Cloudinary folder
+        // Upload image to Cloudinary
         Map<String, Object> uploadResult = cloudinary.uploader().upload(
                 dto.getImage().getBytes(),
                 ObjectUtils.asMap("folder", "mahinda_trade_center")
         );
 
-        // ✅ Create entity and map fields
+        // Create entity
         Cloth cloth = new Cloth();
         cloth.setClothName(dto.getClothName());
         cloth.setPrice(dto.getPrice());
         cloth.setSizes(dto.getSizes());
         cloth.setClothType(dto.getClothType());
 
-        // ✅ Ensure numeric stock values
+        // Validate stock count
         Map<String, Integer> validStock = new HashMap<>();
         if (dto.getStockCount() != null) {
             dto.getStockCount().forEach((size, count) -> {
@@ -55,29 +55,29 @@ public class ClothService {
         }
         cloth.setStockCount(validStock);
 
-        // ✅ Set uploaded image URL
+        // Set uploaded image URL
         cloth.setImageUrl(uploadResult.get("secure_url").toString());
 
-        // ✅ Save to DB
+        // Save to DB
         return clothRepository.save(cloth);
     }
 
-    // ✅ Get all clothes
+    // ✅ Get all clothes (sorted: NEWEST FIRST)
     public List<Cloth> getAllClothes() {
-        return clothRepository.findAll();
+        return clothRepository.findAllByOrderByIdDesc();
     }
 
-    // ✅ Get clothes by type
+    // ✅ Get clothes by type (sorted: NEWEST FIRST)
     public List<Cloth> getByType(String type) {
-        return clothRepository.findByClothType(type);
+        return clothRepository.findByClothTypeOrderByIdDesc(type);
     }
 
-    // ✅ Get single cloth by ID
+    // Get single cloth by ID
     public Cloth getById(Long id) {
         return clothRepository.findById(id).orElse(null);
     }
 
-    // ✅ Update existing cloth
+    // Update cloth
     @Transactional
     public Cloth updateCloth(Long id, String clothName, double price, List<String> sizes,
                              String clothType, Map<String, Integer> stockCount,
@@ -94,7 +94,7 @@ public class ClothService {
         existing.setClothType(clothType);
         existing.setStockCount(stockCount);
 
-        // ✅ If new image uploaded, replace old one
+        // Replace image if new one uploaded
         if (image != null && !image.isEmpty()) {
             Map<String, Object> uploadResult = cloudinary.uploader().upload(
                     image.getBytes(),
@@ -106,7 +106,7 @@ public class ClothService {
         return clothRepository.save(existing);
     }
 
-    // ✅ Delete cloth by ID
+    // Delete cloth by ID
     public boolean deleteCloth(Long id) {
         if (clothRepository.existsById(id)) {
             clothRepository.deleteById(id);
